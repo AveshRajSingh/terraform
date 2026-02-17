@@ -7,5 +7,7 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
-*.tfvars
-*.tfvars.json
+.tfvars
+.tfvars.json
+terra-ec2.pem
+terra-ec2.pem.pub

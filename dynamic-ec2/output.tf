@@ -1,15 +1,23 @@
 output "ec2_names" {
   value = [
-    for i in aws_instance.ec2 :
+    for i in values(aws_instance.ec2) :
     try(i.tags["Name"], "no-name")
   ]
 }
 
+
 output "ec2_ids" {
-  value = aws_instance.ec2[*].id 
+  value = [
+    for i in values(aws_instance.ec2) :
+    i.id
+  ]
 }
+
 output "ec2_public_ip" {
-  value = aws_instance.ec2[*].public_ip
+  value = [
+    for i in values(aws_instance.ec2) :
+    i.public_ip
+  ]
 }
 output "vpc_id" {
   value = aws_vpc.main_vpc.id
