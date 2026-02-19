@@ -62,13 +62,19 @@ resource "aws_key_pair" "ec2_key_pair" {
 }
 
 resource "aws_instance" "ec2" {
+  
   ami                    = data.aws_ami.ubuntu.id # FIXED: Added .id
-  instance_type          = "t3.micro"
+  instance_type          = var.ec2_inststance_type
   vpc_security_group_ids = [aws_security_group.allowssh.id]
   
   # This picks the first subnet ID from the list found by the data source
   subnet_id              = data.aws_subnets.default.ids[0]
   key_name               = aws_key_pair.ec2_key_pair.key_name
+
+   root_block_device {
+    volume_size = var.ec2_root_storage_size
+    volume_type = "gp3"
+  } 
 
   tags = {
     Name = "Terraform ec2"
@@ -78,4 +84,8 @@ resource "aws_instance" "ec2" {
 output "ubuntu_user_name" {
   description = "Command to login into the ec2"
   value = "ssh -i ../terra-ec2.pem ubuntu@${aws_instance.ec2.public_ip}"
+}
+output "ec2_public_dns" {
+  description = "Here is your dns"
+  value = aws_instance.ec2.public_dns
 }
